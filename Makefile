@@ -5,7 +5,7 @@ RAYLIB_PATH = C:/Code/c/lib/raylib
 
 # Compiler and Flags
 CC = gcc
-CFLAGS = -I$(RAYLIB_PATH)/include -I./src
+CFLAGS = -I$(RAYLIB_PATH)/include -I./src -DRAYGUI_IMPLEMENTATION -DBUILD_LIBTYPE_SHARED -Wall -Wextra -O2 -Wno-unused-parameter
 LDFLAGS = -L$(RAYLIB_PATH)/lib
 LIBS = -lraylib -lpthread -lopengl32 -lgdi32 -lwinmm -static
 
@@ -13,7 +13,7 @@ LIBS = -lraylib -lpthread -lopengl32 -lgdi32 -lwinmm -static
 TARGET = pid_sim
 
 # Source Files
-SRC = src/main.c src/pid.c src/sim.c src/graph.c src/utils.c
+SRC = src/main.c src/pid.c src/sim.c src/gui.c src/utils.c src/log.c src/raygui.h
 
 # Object Files
 OBJ = $(SRC:.c=.o)

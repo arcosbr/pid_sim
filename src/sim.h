@@ -1,3 +1,4 @@
+// sim.h
 #ifndef SIM_H
 #define SIM_H
 
@@ -30,6 +31,12 @@ typedef struct
     float omega;               // Angular velocity (rad/s)
     float Irot;                // Rotational inertia
 } SimulationState;
+
+// Pressure Control State Structure
+typedef struct
+{
+    float pressureSetpoint;    // Manual pressure (0-200 bar)
+} PressureControlState;
 
 // External Disturbance Parameters
 typedef struct

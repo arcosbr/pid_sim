@@ -32,3 +32,6 @@ Thumbs.db
 # Outros arquivos temporários
 *.tmp
 *.temp
+
+# Data logs
+data.csv
