@@ -1,7 +1,3 @@
-Certainly! Below is the updated `README.md` file for your **PID Simulation - Hydraulic Motor** project. The updates include **Version 1.3** in English, detailing the recent improvements made to address compiler warnings and enhance code maintainability.
-
----
-
 # PID Simulation - Hydraulic Motor
 
 ## Description
