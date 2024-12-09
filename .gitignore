@@ -1,0 +1,34 @@
+# Arquivos objeto compilados
+*.o
+
+# Executáveis
+*.exe
+
+# Arquivos gerados pelo Make
+Makefile~
+*.d
+
+# Diretórios de build (se aplicável)
+build/
+bin/
+src/*.o
+
+
+# Arquivos temporários do sistema
+Thumbs.db
+.DS_Store
+
+# Arquivos de log
+*.log
+
+# IDEs e editores comuns (opcional)
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Outros arquivos temporários
+*.tmp
+*.temp
