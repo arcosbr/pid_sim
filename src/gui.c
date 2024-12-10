@@ -3,40 +3,27 @@
 #include <stddef.h>
 #include "gui.h"
 #include "raygui.h"
-#include "utils.h"
 #include "style_amber.h"
+#include "utils.h"
 
 // Amber Style Color Definitions
-// static const Color AMBER_DEFAULT_BORDER_COLOR_NORMAL =
-//     (Color){137, 137, 136, 255}; // 0x898988ff
-// static const Color AMBER_DEFAULT_BASE_COLOR_NORMAL =
-//     (Color){41, 41, 41, 255}; // 0x292929ff
-static const Color AMBER_DEFAULT_TEXT_COLOR_NORMAL =
-    (Color){212, 212, 212, 255}; // 0xd4d4d4ff
-static const Color AMBER_DEFAULT_BORDER_COLOR_FOCUSED =
-    (Color){235, 137, 29, 255}; // 0xeb891dff
-// static const Color AMBER_DEFAULT_BASE_COLOR_FOCUSED =
-//     (Color){41, 41, 41, 255}; // 0x292929ff
-static const Color AMBER_DEFAULT_TEXT_COLOR_FOCUSED =
-    (Color){255, 255, 255, 255}; // 0xffffffff
-static const Color AMBER_DEFAULT_BORDER_COLOR_PRESSED =
-    (Color){241, 207, 157, 255}; // 0xf1cf9dff
-// static const Color AMBER_DEFAULT_BASE_COLOR_PRESSED =
-//     (Color){243, 147, 51, 255}; // 0xf39333ff
-// static const Color AMBER_DEFAULT_TEXT_COLOR_PRESSED =
-//     (Color){40, 32, 32, 255}; // 0x282020ff
-// static const Color AMBER_DEFAULT_BORDER_COLOR_DISABLED =
-//     (Color){106, 106, 106, 255}; // 0x6a6a6aff
-// static const Color AMBER_DEFAULT_BASE_COLOR_DISABLED =
-//     (Color){129, 129, 129, 255}; // 0x818181ff
-// static const Color AMBER_DEFAULT_TEXT_COLOR_DISABLED =
-//     (Color){96, 96, 96, 255}; // 0x606060ff
-static const Color AMBER_DEFAULT_LINE_COLOR =
-    (Color){239, 146, 42, 255}; // 0xef922aff
-static const Color AMBER_DEFAULT_BACKGROUND_COLOR =
-    (Color){51, 51, 51, 255}; // 0x333333ff
-static const Color AMBER_HIGHLIGHT_COLOR =
-    (Color){235, 137, 29, 255}; // 0xeb891dff
+#define TEXT_NORMAL     CLITERAL(Color){212, 212, 212, 255}  // Light Gray
+#define BORDER_FOCUSED  CLITERAL(Color){235, 137,  29, 255}  // Orange
+#define TEXT_FOCUSED    CLITERAL(Color){255, 255, 255, 255}  // White
+#define BORDER_PRESSED  CLITERAL(Color){241, 207, 157, 255}  // Light Orange
+#define LINE_COLOR      CLITERAL(Color){239, 146,  42, 255}  // Dark Orange
+#define BACKGROUND      CLITERAL(Color){51,   51,  51, 255}  // Dark Gray
+#define HIGHLIGHT       CLITERAL(Color){235, 137,  29, 255}  // Orange
+
+// Define additional colors
+// #define BORDER_NORMAL       CLITERAL(Color){137, 137, 136, 255}
+// #define BASE_COLOR_NORMAL   CLITERAL(Color){41, 41, 41, 255}
+// #define BORDER_DISABLED     CLITERAL(Color){106, 106, 106, 255}
+// #define BASE_COLOR_DISABLED CLITERAL(Color){129, 129, 129, 255}
+// #define TEXT_DISABLED       CLITERAL(Color){96, 96, 96, 255}
+// #define BASE_COLOR_FOCUSED  CLITERAL(Color){41, 41, 41, 255}
+// #define BASE_COLOR_PRESSED  CLITERAL(Color){243, 147, 51, 255}
+// #define TEXT_PRESSED        CLITERAL(Color){40, 32, 32, 255}
 
 // Initialize Graphics Window
 void Graphics_InitWindow(const char *title, int width, int height, int fps)
@@ -58,15 +45,15 @@ void Graphics_Render(float simTime, SimulationState *simState,
                      float *pressureHistory)
 {
     BeginDrawing();
-    ClearBackground(AMBER_DEFAULT_BACKGROUND_COLOR);
+    ClearBackground(BACKGROUND);
 
     // Draw Graphs
     Graphics_DrawGraph(angleHistory, historyIndex, MAX_DATA_POINTS, 10, 400,
-                       400, 200, AMBER_DEFAULT_BORDER_COLOR_PRESSED, 3.0f);
+                       400, 200, BORDER_PRESSED, 3.0f);
     Graphics_DrawGraph(errorHistory, historyIndex, MAX_DATA_POINTS, 420, 400,
-                       400, 200, AMBER_DEFAULT_TEXT_COLOR_FOCUSED, 3.0f);
+                       400, 200, TEXT_FOCUSED, 3.0f);
     Graphics_DrawGraph(pressureHistory, historyIndex, MAX_DATA_POINTS, 830, 400,
-                       400, 200, AMBER_DEFAULT_LINE_COLOR, 200.0f);
+                       400, 200, LINE_COLOR, 200.0f);
 
     // Draw Compass
     Graphics_DrawCompass(830, 190, 150);
@@ -86,20 +73,19 @@ void Graphics_Render(float simTime, SimulationState *simState,
 // Draw Compass
 void Graphics_DrawCompass(float centerX, float centerY, float radius)
 {
-    DrawCircleLines((int)centerX, (int)centerY, (int)radius,
-                    AMBER_DEFAULT_BORDER_COLOR_PRESSED);
+    DrawCircleLines((int) centerX, (int) centerY, (int) radius, BORDER_PRESSED);
 
     const float angles[] = {0.0f, M_PI_2, M_PI, 3.0f * M_PI_2};
     const char *labels[] = {"90°", "180°", "270°", "0°"};
     const float margin[] = {20.0f, 16.0f, 40.0f, 20.0f};
-    const float dif[] = {10.0f, 15.0f, 10.0f, 5.0f};
+    const float dif[]    = {10.0f, 15.0f, 10.0f, 5.0f};
 
     for (int i = 0; i < 4; i++)
     {
         float x = centerX + cosf(angles[i]) * (radius + margin[i]);
         float y = centerY - sinf(angles[i]) * (radius + margin[i]);
-        DrawText(labels[i], (int)(x - dif[i]), (int)(y - 10), 20,
-                 AMBER_DEFAULT_TEXT_COLOR_FOCUSED);
+        DrawText(labels[i], (int) (x - dif[i]), (int) (y - 10), 20,
+                 TEXT_FOCUSED);
     }
 }
 
@@ -117,10 +103,9 @@ void Graphics_DrawCompassAndPendulum(float angle, float length)
     float py = compassCenterY + length * cosf(angle) * compassRadius;
 
     DrawLineEx((Vector2){compassCenterX, compassCenterY}, (Vector2){px, py},
-               5.0f, AMBER_HIGHLIGHT_COLOR);
-    DrawCircle((int)compassCenterX, (int)compassCenterY, 10,
-               AMBER_DEFAULT_BORDER_COLOR_PRESSED);
-    DrawCircle((int)px, (int)py, 10, AMBER_DEFAULT_BORDER_COLOR_PRESSED);
+               5.0f, HIGHLIGHT);
+    DrawCircle((int) compassCenterX, (int) compassCenterY, 10, BORDER_PRESSED);
+    DrawCircle((int) px, (int) py, 10, BORDER_PRESSED);
 }
 
 // Draw Graph
@@ -128,23 +113,24 @@ void Graphics_DrawGraph(float *history, int historyIndex, int maxPoints,
                         float graphX, float graphY, float graphWidth,
                         float graphHeight, Color color, float scale)
 {
-    BeginScissorMode((int)graphX, (int)graphY, (int)graphWidth,
-                     (int)graphHeight);
+    BeginScissorMode((int) graphX, (int) graphY, (int) graphWidth,
+                     (int) graphHeight);
 
     for (int i = 1; i < maxPoints; i++)
     {
+        // Draw line between two points
         int prevIndex = (historyIndex + i - 1) % maxPoints;
         int currIndex = (historyIndex + i) % maxPoints;
-        float val1 = history[prevIndex];
-        float val2 = history[currIndex];
+        float val1    = history[prevIndex];
+        float val2    = history[currIndex];
 
         float x1 =
-            graphX + (float)(i - 1) * (graphWidth / (float)(maxPoints - 1));
-        float x2 = graphX + (float)i * (graphWidth / (float)(maxPoints - 1));
+            graphX + (float) (i - 1) * (graphWidth / (float) (maxPoints - 1));
+        float x2 = graphX + (float) i * (graphWidth / (float) (maxPoints - 1));
 
         float yCenter = graphY + graphHeight / 2.0f;
-        float y1 = yCenter - (val1 / scale) * (graphHeight / 2.0f);
-        float y2 = yCenter - (val2 / scale) * (graphHeight / 2.0f);
+        float y1      = yCenter - (val1 / scale) * (graphHeight / 2.0f);
+        float y2      = yCenter - (val2 / scale) * (graphHeight / 2.0f);
 
         DrawLineEx((Vector2){x1, y1}, (Vector2){x2, y2}, 2.0f, color);
     }
@@ -165,33 +151,32 @@ void Graphics_DrawSimulationGraphs(float *angleHistory, float *errorHistory,
           pressureGraphWidth = 400.0f, pressureGraphHeight = 200.0f;
 
     // Draw graph borders and labels
-    DrawRectangleLines((int)graphX, (int)graphY, (int)graphWidth,
-                       (int)graphHeight, AMBER_DEFAULT_BORDER_COLOR_PRESSED);
-    DrawText("Angle (rad)", (int)graphX, (int)(graphY - 30), 20,
-             AMBER_DEFAULT_TEXT_COLOR_FOCUSED);
+    DrawRectangleLines((int) graphX, (int) graphY, (int) graphWidth,
+                       (int) graphHeight, BORDER_PRESSED);
+    DrawText("Angle (rad)", (int) graphX, (int) (graphY - 30), 20,
+             TEXT_FOCUSED);
 
-    DrawRectangleLines((int)errorGraphX, (int)errorGraphY, (int)errorGraphWidth,
-                       (int)errorGraphHeight,
-                       AMBER_DEFAULT_BORDER_COLOR_PRESSED);
-    DrawText("Error (rad)", (int)errorGraphX, (int)(errorGraphY - 30), 20,
-             AMBER_DEFAULT_TEXT_COLOR_FOCUSED);
+    DrawRectangleLines((int) errorGraphX, (int) errorGraphY,
+                       (int) errorGraphWidth, (int) errorGraphHeight,
+                       BORDER_PRESSED);
+    DrawText("Error (rad)", (int) errorGraphX, (int) (errorGraphY - 30), 20,
+             TEXT_FOCUSED);
 
-    DrawRectangleLines((int)pressureGraphX, (int)pressureGraphY,
-                       (int)pressureGraphWidth, (int)pressureGraphHeight,
-                       AMBER_DEFAULT_BORDER_COLOR_PRESSED);
-    DrawText("Pressure (bar)", (int)pressureGraphX, (int)(pressureGraphY - 30),
-             20, AMBER_DEFAULT_TEXT_COLOR_FOCUSED);
+    DrawRectangleLines((int) pressureGraphX, (int) pressureGraphY,
+                       (int) pressureGraphWidth, (int) pressureGraphHeight,
+                       BORDER_PRESSED);
+    DrawText("Pressure (bar)", (int) pressureGraphX,
+             (int) (pressureGraphY - 30), 20, TEXT_FOCUSED);
 
     // Draw graphs
     Graphics_DrawGraph(angleHistory, historyIndex, MAX_DATA_POINTS, graphX,
-                       graphY, graphWidth, graphHeight,
-                       AMBER_DEFAULT_BORDER_COLOR_PRESSED, 3.0f);
+                       graphY, graphWidth, graphHeight, BORDER_PRESSED, 3.0f);
     Graphics_DrawGraph(errorHistory, historyIndex, MAX_DATA_POINTS, errorGraphX,
                        errorGraphY, errorGraphWidth, errorGraphHeight,
-                       AMBER_DEFAULT_TEXT_COLOR_FOCUSED, 3.0f);
+                       TEXT_FOCUSED, 3.0f);
     Graphics_DrawGraph(pressureHistory, historyIndex, MAX_DATA_POINTS,
                        pressureGraphX, pressureGraphY, pressureGraphWidth,
-                       pressureGraphHeight, AMBER_DEFAULT_LINE_COLOR, 200.0f);
+                       pressureGraphHeight, LINE_COLOR, 200.0f);
 }
 
 // Display Simulation Information
@@ -202,7 +187,7 @@ void Graphics_DisplayInfo(float simTime, float angleSetpoint,
                           float externalTorque, float Kp, float Ki, float Kd,
                           bool useRK4)
 {
-    const Color infoTextColor = AMBER_DEFAULT_TEXT_COLOR_NORMAL;
+    const Color infoTextColor = TEXT_NORMAL;
 
     DrawText("PID Simulation - Hydraulic Motor", 10, 10, 20, infoTextColor);
     DrawText(TextFormat("Time: %.2f s", simTime), 10, 40, 20, infoTextColor);
@@ -227,27 +212,28 @@ void Graphics_DisplayInfo(float simTime, float angleSetpoint,
     DrawText(TextFormat("Kp: %.1f | Ki: %.3f | Kd: %.1f", Kp, Ki, Kd), 10, 310,
              20, infoTextColor);
 
-    DrawText("Adjust Kp (F2: -10 | F3: +10), Ki (F4: -0.01 | F5: +0.01), Kd "
-             "(F6: -10 | F7: +10)",
-             10, 610, 20, AMBER_HIGHLIGHT_COLOR);
+    DrawText(
+        "Adjust Kp (F2: -10 | F3: +10), Ki (F4: -0.01 | F5: +0.01), Kd "
+        "(F6: -10 | F7: +10)",
+        10, 610, 20, HIGHLIGHT);
     DrawText("Use UP/DOWN ARROWS to adjust manual pressure (+/-1 bar)", 10, 640,
-             20, AMBER_HIGHLIGHT_COLOR);
-    DrawText("Press R to reset simulation", 10, 670, 20, AMBER_HIGHLIGHT_COLOR);
+             20, HIGHLIGHT);
+    DrawText("Press R to reset simulation", 10, 670, 20, HIGHLIGHT);
     DrawText(
         "Press P to toggle disturbance, J/K to adjust disturbance magnitude",
-        10, 700, 20, AMBER_HIGHLIGHT_COLOR);
+        10, 700, 20, HIGHLIGHT);
     DrawText(TextFormat("Integration Method: %s (Press TAB to toggle)",
                         useRK4 ? "RK4" : "Euler"),
-             10, 740, 20, AMBER_DEFAULT_BORDER_COLOR_FOCUSED);
+             10, 740, 20, BORDER_FOCUSED);
 }
 
 // Draw UI Elements
 void Graphics_DrawUI(PIDConfig *pidConfig, bool *dataLogging)
 {
     // Define UI Rectangle Areas
-    Rectangle kpSliderRect = {900, 620, 300, 20};
-    Rectangle kiSliderRect = {900, 650, 300, 20};
-    Rectangle kdSliderRect = {900, 680, 300, 20};
+    Rectangle kpSliderRect  = {900, 620, 300, 20};
+    Rectangle kiSliderRect  = {900, 650, 300, 20};
+    Rectangle kdSliderRect  = {900, 680, 300, 20};
     Rectangle logButtonRect = {900, 710, 150, 40};
 
     // Draw PID Sliders
@@ -272,7 +258,7 @@ void Graphics_DrawUI(PIDConfig *pidConfig, bool *dataLogging)
 void Graphics_UpdateHistory(float *history, int *index, float value)
 {
     history[*index] = value;
-    *index = (*index + 1) % MAX_DATA_POINTS;
+    *index          = (*index + 1) % MAX_DATA_POINTS;
 }
 
 // Update UI Elements (Placeholder for future use)
@@ -285,8 +271,11 @@ void Graphics_UpdateUI(PIDConfig *pidConfig, bool *dataLogging)
 void Graphics_HandleManualPressureAdjustment(PressureControlState *state,
                                              float maxPressure)
 {
+    // Manual pressure adjustment with UP
     if (IsKeyPressed(KEY_UP) && state->pressureSetpoint < maxPressure)
         state->pressureSetpoint += 1.0f;
+
+    // Manual pressure adjustment with DOWN
     if (IsKeyPressed(KEY_DOWN) && state->pressureSetpoint > 0.0f)
         state->pressureSetpoint -= 1.0f;
 }
@@ -300,26 +289,27 @@ void Graphics_HandleSimulationReset(SimulationState *simState,
                                     float pressureHistory[], int *historyIndex,
                                     DataLogger *logger)
 {
+    // Reset Simulation with R Key
     if (IsKeyPressed(KEY_R))
     {
         // Reset Simulation Variables
-        simState->angle = 0.0f;
-        simState->omega = 0.0f;
-        pidState->integral = 0.0f;
-        pidState->previousError = 0.0f;
+        simState->angle                        = 0.0f;
+        simState->omega                        = 0.0f;
+        pidState->integral                     = 0.0f;
+        pidState->previousError                = 0.0f;
         pressureControlState->pressureSetpoint = 10.0f;
-        *pressureFiltered = 0.0f;
+        *pressureFiltered                      = 0.0f;
 
         // Reset External Disturbance
-        // Assuming this function is available or pass the pointer
+        // Assuming this function is available ou passe o ponteiro
         // disturbance.magnitude = 0.0f;
         // disturbance.enabled = false;
 
         // Reset Histories
         for (int i = 0; i < MAX_DATA_POINTS; i++)
         {
-            angleHistory[i] = 0.0f;
-            errorHistory[i] = 0.0f;
+            angleHistory[i]    = 0.0f;
+            errorHistory[i]    = 0.0f;
             pressureHistory[i] = 0.0f;
         }
 

@@ -1,20 +1,16 @@
-
 // main.c
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
 #include <math.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
-#include "raylib.h"
 
 #include "gui.h"
 #include "log.h"
 #include "pid.h"
 #include "sim.h"
 #include "utils.h"
-
-// Define Maximum Data Points for Graphs
-#define MAX_DATA_POINTS 1000
+#include "raylib.h"
 
 int main(void)
 {
@@ -23,13 +19,13 @@ int main(void)
     const float Ki_min = 0.0f, Ki_max = 1.0f;
     const float Kd_min = 0.0f, Kd_max = 1000.0f;
 
-    srand((unsigned int)time(NULL));
+    srand((unsigned int) time(NULL));
 
     // Initialize PID Controller
     PIDConfig pidConfig = {
         1.0f,  // Kp
-        0.01f, // Ki
-        5.0f   // Kd
+        0.3f,  // Ki
+        100.0f // Kd
     };
 
     PIDState pidState;
@@ -41,13 +37,13 @@ int main(void)
     };
 
     // Histories for Graphs
-    float angleHistory[MAX_DATA_POINTS] = {0.0f};
-    float errorHistory[MAX_DATA_POINTS] = {0.0f};
+    float angleHistory[MAX_DATA_POINTS]    = {0.0f};
+    float errorHistory[MAX_DATA_POINTS]    = {0.0f};
     float pressureHistory[MAX_DATA_POINTS] = {0.0f};
-    int historyIndex = 0;
+    int historyIndex                       = 0;
 
     // Pressure Filtering
-    float pressureFiltered = 0.0f;
+    float pressureFiltered    = 0.0f;
     float pressureFilterAlpha = 0.1f; // Lower value = stronger filtering
 
     // Integration Method Flag
@@ -55,8 +51,8 @@ int main(void)
 
     // External Disturbance Parameters
     ExternalDisturbance disturbance = {
-        .enabled = false, // External disturbance disabled
-        .magnitude = 0.0f // Disturbance magnitude (optional)
+        .enabled   = false, // External disturbance disabled
+        .magnitude = 0.0f   // Disturbance magnitude (optional)
     };
 
     // Angle Noise Amplitude
@@ -113,7 +109,7 @@ int main(void)
 
         if (disturbance.enabled)
         {
-            externalTorque = ((float)rand() / (float)RAND_MAX - 0.5f) * 2.0f *
+            externalTorque = ((float) rand() / (float) RAND_MAX - 0.5f) * 2.0f *
                              disturbance.magnitude;
         }
 
@@ -127,7 +123,7 @@ int main(void)
         // Desired Final Pressure
         float rawPressure = pressureControlState.pressureSetpoint + pidOutput;
 
-        rawPressure = RClamp(rawPressure, 0.0f, motor.controlPressure);
+        rawPressure      = RClamp(rawPressure, 0.0f, motor.controlPressure);
         pressureFiltered = pressureFilterAlpha * pressureFiltered +
                            (1.0f - pressureFilterAlpha) * rawPressure;
 
@@ -140,16 +136,16 @@ int main(void)
 
         // Motor Torque Calculation
         float motorTorqueCalc =
-            ((pressure_pa * motor.displacement) / (2.0f * (float)M_PI)) *
-            motor.torqueScalingFactor;
+            ((pressure_pa * motor.displacement) / (2.0f * (float) M_PI)) *
+            motor.torqueScaling;
 
         // Saturate Motor Torque
-        motorTorqueCalc =
-            RClamp(motorTorqueCalc, -motor.maxMotorTorque, motor.maxMotorTorque);
+        motorTorqueCalc = RClamp(motorTorqueCalc, -motor.maxMotorTorque,
+                                 motor.maxMotorTorque);
 
         // Integration Substeps for Stability
         const int substeps = 20;
-        float sub_dt = dt / substeps;
+        float sub_dt       = dt / substeps;
 
         // Substeps for stability
         for (int i = 0; i < substeps; i++)
@@ -164,8 +160,8 @@ int main(void)
 
         // Normalize Angle to [-PI, PI]
         simState.angle =
-            fmodf(simState.angle + (float)M_PI, 2.0f * (float)M_PI) -
-            (float)M_PI;
+            fmodf(simState.angle + (float) M_PI, 2.0f * (float) M_PI) -
+            (float) M_PI;
 
         // Update Histories
         float error = angleSetpoint - measuredAngle;

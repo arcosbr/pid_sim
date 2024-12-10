@@ -34,4 +34,4 @@ Thumbs.db
 *.temp
 
 # Data logs
-data.csv
+sim_data.csv

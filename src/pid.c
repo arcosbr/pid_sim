@@ -8,7 +8,7 @@ static const float MIN_INTEGRAL = -30.0f;
 void PID_Init(PIDState *state)
 {
     state->previousError = 0.0f;
-    state->integral = 0.0f;
+    state->integral      = 0.0f;
 }
 
 // Calculate PID Output

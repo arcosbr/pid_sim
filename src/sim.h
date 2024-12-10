@@ -18,9 +18,10 @@ typedef struct
 typedef struct
 {
     float maxPressure;         // Maximum pressure (bar)
-    float controlPressure;     // Control pressure range (0-200 bar)
+    float controlPressure;     // Control pressure range (0-200
+                               // bar)
     float displacement;        // Displacement (m³/rev)
-    float torqueScalingFactor; // Torque scaling factor
+    float torqueScaling;       // Torque scaling factor
     float maxMotorTorque;      // Maximum motor torque (N·m)
 } MotorParameters;
 
@@ -55,8 +56,8 @@ void Simulation_Reset(SimulationState *state, float initialAngle,
 
 // Compute Total Torque
 float Simulation_ComputeTotalTorque(const PhysicsConstants *physics,
-                                    float angle, float omega,
-                                    float motorTorque, float externalTorque);
+                                    float angle, float omega, float motorTorque,
+                                    float externalTorque);
 
 // Integration Methods
 void Simulation_IntegrateEuler(SimulationState *state,

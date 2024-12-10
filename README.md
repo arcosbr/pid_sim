@@ -99,6 +99,27 @@ This project implements a **physical simulation** of a pendulum controlled by a 
    - Updated `README.md` to reflect recent code improvements and maintenance actions.
    - Added detailed explanations of the modular structure to assist future contributors and maintainers in understanding the project layout.
 
+### Version 1.4
+
+1. **Adherence to CS50 C Style Guide**:
+   - **Clang-Format Configuration**:
+     - Implemented a `.clang-format` file aligned with the CS50 Style Guide:
+       - Allman-style braces for better readability.
+       - Indentation with 4 spaces, no tabs.
+       - Includes sorted alphabetically for consistency.
+       - Column limit set to 80 characters for cleaner code.
+     - Applied the new formatting to the entire codebase to ensure consistency.
+
+2. **Code Quality Enhancements**:
+   - **Automated Formatting**:
+     - Integrated formatting checks into the build pipeline to enforce code style automatically during development.
+   - **Improved Readability**:
+     - Reformatted all code files to follow the updated style guide for better clarity and maintainability.
+
+3. **Other Fixes and Refinements**:
+   - Minor tweaks to comments and variable naming for better alignment with the style guide.
+   - Optimized the organization of header files to reduce redundant includes and improve compilation time.
+
 ---
 
 ## Requirements

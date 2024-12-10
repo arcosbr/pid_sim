@@ -1,0 +1,37 @@
+{
+    "BasedOnStyle": "LLVM",
+    "IndentWidth": 4,
+    "TabWidth": 4,
+    "UseTab": "Never",
+    "ColumnLimit": 80,
+    "PointerAlignment": "Right",
+    "DerivePointerAlignment": false,
+    "BreakBeforeBraces": "Allman",
+    "SpaceBeforeParens": "ControlStatements",
+    "SpaceAfterCStyleCast": true,
+    "SpaceAroundOperators": true,
+    "SortIncludes": true,
+    "IncludeBlocks": "Preserve",
+    "IncludeCategories": [
+        {
+            "Regex": ".*",
+            "Priority": 1
+        }
+    ],
+    "SpacesBeforeTrailingComments": 1,
+    "AlignConsecutiveAssignments": true,
+    "AlignConsecutiveMacros": true,
+    "AlignOperands": true,
+    "AlignTrailingComments": true,
+    "AlignEscapedNewlines": "Left",
+    "IndentCaseLabels": true,
+    "AllowShortIfStatementsOnASingleLine": false,
+    "AllowShortLoopsOnASingleLine": false,
+    "AllowShortFunctionsOnASingleLine": false,
+    "AllowShortEnumsOnASingleLine": false,
+    "AllowAllParametersOfDeclarationOnNextLine": false,
+    "AlwaysBreakAfterDefinitionReturnType": "None",
+    "AlwaysBreakBeforeMultilineStrings": true,
+    "MaxEmptyLinesToKeep": 1,
+    "PenaltyBlankLines": 100
+}
